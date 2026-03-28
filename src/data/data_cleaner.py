@@ -26,7 +26,9 @@ def prepare_dataset(input_path, output_path):
     # очищаем текст
     df["text"] = df["text"].apply(clean_text)
 
-    df = df[["id", "text"]]
+    # df = df[["id", "text"]]  # до постпроцессинга результатов одинаковых
+
+    df = df[["id", "title", "text"]]
 
     df.to_csv(output_path, index=False)
 

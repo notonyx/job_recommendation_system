@@ -5,3 +5,5 @@ nltk
 sentence-transformers
 faiss-cpu
 tqdm
+python-docx
+pdfplumber
