@@ -1,0 +1,13 @@
+<h1>Рекомендации вакансий</h1>
+
+{% for job in jobs %}
+    <div style="border:1px solid #ddd; padding:10px; margin:10px;">
+        <h3>{{ job.title }}</h3>
+
+        <p><b>ID:</b> {{ job.id }}</p>
+
+        <p>{{ job.text|truncatechars:200 }}</p>
+
+        <p><b>Similarity:</b> {{ job.similarity }}</p>
+    </div>
+{% endfor %}

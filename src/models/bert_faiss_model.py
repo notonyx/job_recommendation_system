@@ -16,9 +16,14 @@ class JobRecommenderBERTFAISS:
         self.index = None
         self.batch_size = batch_size
 
-    def load_data(self, csv_path):
-        """Загрузка вакансий"""
-        self.df = pd.read_csv(csv_path)
+    # def load_data(self, csv_path): # для main.py
+    #     """Загрузка вакансий"""
+    #     self.df = pd.read_csv(csv_path)
+    #     print("Данные загружены:", self.df.shape)
+
+    def load_data(self, df):
+        """Теперь принимаем DataFrame, НЕ CSV"""
+        self.df = df
         print("Данные загружены:", self.df.shape)
 
     def encode_jobs(self):
@@ -26,6 +31,7 @@ class JobRecommenderBERTFAISS:
         if os.path.exists(self.embeddings_path):
             print("Загрузка эмбеддингов из файла...")
             self.job_embeddings = np.load(self.embeddings_path)
+            print("Размер эмбенддингов: ", len(self.job_embeddings))
         else:
             print("Векторизация вакансий BERT по батчам...")
             texts = self.df["text"].tolist()
@@ -47,7 +53,7 @@ class JobRecommenderBERTFAISS:
         self.index.add(self.job_embeddings)
         print("FAISS индекс построен. Вакансии готовы к поиску.")
 
-    def recommend(self, resume_text, top_k=5):
+    def recommend(self, resume_text, top_k=10):
         """Рекомендации вакансий по резюме"""
         resume_text = clean_text(resume_text)
         resume_vec = self.model.encode([resume_text], convert_to_numpy=True)

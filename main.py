@@ -5,6 +5,7 @@ from src.models.bert_faiss_model import JobRecommenderBERTFAISS
 from src.models.job_recommender_fields import JobRecommenderFields
 from src.utils.resume_reader import read_resume
 from src.utils.recommendation_postprocessing import unique_by_title
+from src.models.hybrid_model import JobRecommenderHybrid
 
 def main():
 
@@ -60,10 +61,6 @@ def main():
     #     print()
 
     # --------------- BERT + FAISS -------------------
-    
-    recommender = JobRecommenderBERTFAISS(batch_size=256)
-    recommender.load_data("data/processed/jobs_cleaned_all.csv")
-    recommender.encode_jobs()  # создаёт эмбеддинги и FAISS индекс
 
     # resume = """
     # Python developer
@@ -90,6 +87,8 @@ def main():
     resume = read_resume(resume_path)
     resume = clean_text(resume)
 
+    print(resume)
+
     # resume = """
     # Я опытный маркетолог с 5-летним стажем работы в digital-рекламе и продвижении брендов. 
     # Занимался созданием контент-планов, запуском рекламных кампаний в социальных сетях, 
@@ -101,6 +100,12 @@ def main():
 
     # results = recommender.recommend(resume, top_k=10)
 
+# ----------------------------------------------------------------------------------------------
+
+    recommender = JobRecommenderBERTFAISS(batch_size=256)
+    recommender.load_data("data/processed/jobs_cleaned_all.csv")
+    recommender.encode_jobs()  # создаёт эмбеддинги и FAISS индекс
+
     results = recommender.recommend(resume, top_k=30)
     results = unique_by_title(results)
     results = results[:10]
@@ -111,6 +116,27 @@ def main():
         print("Text:", row["text"][:200])
         print("Similarity:", row["similarity"])
         print()
+
+
+# -------  Hybrid система (не очень)  ---------------------------------------------------------------------------------------
+
+    # recommender = JobRecommenderHybrid(top_n_bm25=100)
+
+    # recommender.load_data("data/processed/jobs_cleaned_all.csv")
+
+    # recommender.prepare_bm25()
+    # recommender.encode_jobs()
+
+    # results = recommender.recommend(resume, top_k=10)
+
+    # print("\nРекомендуемые вакансии (hybrid model):\n")
+    # for i, row in results.iterrows():
+    #     print("ID:", row["id"])
+    #     print("Text:", row["text"][:200])
+    #     print("Similarity:", row["similarity"])
+    #     print()
+
+# ----------------------------------------------------------------------------------------------
 
     # recommender = JobRecommenderFields()
 
