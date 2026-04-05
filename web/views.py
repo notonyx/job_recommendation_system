@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 import pandas as pd
 
 from src.models.bert_faiss_model import JobRecommenderBERTFAISS
-from src.utils.resume_reader import read_resume
+from src.utils.resume_reader import read_resume, normalize_resume, clean_resume
+from src.utils.text_preprocessing import clean_text
 from .forms import ResumeUploadForm
 
 recommender = None
@@ -49,6 +50,10 @@ def upload_resume(request):
 
 def results(request):
     resume_text = request.session.get("resume_text", "")
+
+    resume_text = normalize_resume(resume_text)
+    resume_text = clean_resume(resume_text)
+    resume_text = clean_text(resume_text)
 
     model = get_recommender()
     jobs = model.recommend(resume_text)

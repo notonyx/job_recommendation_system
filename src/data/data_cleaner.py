@@ -16,11 +16,17 @@ def prepare_dataset(input_path, output_path):
     # удаляем строки без описания
     df = df.dropna(subset=["description"])
 
-    # объединяем текст
+    
+    # df["text"] = (  # до Бухгалтер/бухгалтер 2
+    #     df["title"].fillna("") + " " +
+    #     df["description"].fillna("") + " " +
+    #     df["key_skills"].fillna("")
+    # )
+
     df["text"] = (
-        df["title"].fillna("") + " " +
-        df["description"].fillna("") + " " +
-        df["key_skills"].fillna("")
+        (df["title"].fillna("") + " ") * 3 +
+        (df["key_skills"].fillna("") + " ") * 2 +
+        df["description"].fillna("")
     )
 
     # очищаем текст
