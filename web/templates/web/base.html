@@ -1,25 +1,31 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Job Recommender</title>
-
-    <link rel="stylesheet" href="/static/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Job Recommender — подбор вакансий по резюме</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
-    <header>
-        <h1>Job Recommendation System</h1>
-        <nav>
-            <a href="/">Главная</a>
-            <a href="/upload/">Загрузить резюме</a>
-        </nav>
-    </header>
+<header class="navbar">
+    <h1>Job Recommender</h1>
+    <nav>
+        <a href="/">Главная</a>
+        <a href="/upload/">Загрузить резюме</a>
+    </nav>
+</header>
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+<main class="container">
+    {% block content %}
+    {% endblock %}
+</main>
 
+<footer class="footer">
+    <p>Система рекомендации вакансий на основе анализа резюме</p>
+</footer>
+
+{% block extra_js %}{% endblock %}
 </body>
 </html>

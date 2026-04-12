@@ -1,0 +1,29 @@
+{% extends 'web/base.html' %}
+
+{% block content %}
+
+<div class="job-detail">
+
+    <h2 class="job-title">{{ job.title }}</h2>
+
+    <div class="job-meta">
+        <span>💰 {{ job.salary|default:"Не указана" }}</span>
+        <span>📊 {{ job.experience|default:"Не указано" }}</span>
+        <span>💼 {{ job.job_type|default:"Не указано" }}</span>
+    </div>
+
+    <div class="job-section">
+        <h3>Описание</h3>
+        <p>{{ job.description|linebreaks }}</p>
+    </div>
+
+    <div class="job-section">
+        <h3>Навыки</h3>
+        <p>{{ job.key_skills }}</p>
+    </div>
+
+    <a href="/results/" class="btn btn-outline">← Назад</a>
+
+</div>
+
+{% endblock %}

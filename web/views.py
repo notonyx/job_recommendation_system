@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 import pandas as pd
-
+import os
 from src.models.bert_faiss_model import JobRecommenderBERTFAISS
 from src.utils.resume_reader import read_resume, normalize_resume, clean_resume
 from src.utils.text_preprocessing import clean_text
 from .forms import ResumeUploadForm
+
+jobs_full = pd.read_csv("data/raw/Jobs_Cleaned_Full.csv", sep=";")
 
 recommender = None
 
@@ -38,6 +40,7 @@ def upload_resume(request):
                     destination.write(chunk)
 
             text = read_resume(path)
+            os.remove(path)
             request.session['resume_text'] = text
 
             return redirect('results')
@@ -64,3 +67,18 @@ def results(request):
     jobs_list = jobs.to_dict(orient="records")
 
     return render(request, "web/results.html", {"jobs": jobs_list})
+
+def job_detail(request, job_id):
+    jobs_full["id"] = jobs_full["id"].astype(int)
+    job = jobs_full[jobs_full["id"] == int(job_id)]
+
+    if job.empty:
+        return render(request, "web/job_detail.html", {"job": None})
+
+    job = job.iloc[0]
+
+    context = {
+        "job": job
+    }
+
+    return render(request, "web/job_detail.html", context)

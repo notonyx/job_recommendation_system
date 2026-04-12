@@ -1,13 +1,74 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 
 {% block content %}
+<div class="upload-section">
+    <h2>Загрузите резюме</h2>
+    <p class="upload-hint">Поддерживаются форматы: PDF, DOCX, TXT (в зависимости от вашего парсера)</p>
 
-<h2>Загрузите резюме</h2>
+    <form method="post" enctype="multipart/form-data" id="uploadForm">
+        {% csrf_token %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Анализировать</button>
-</form>
+        <div class="upload-zone" id="uploadZone">
+            <div class="upload-icon"></div>
+            <p>Перетащите файл сюда или нажмите для выбора</p>
+            <input type="file" name="file" id="fileInput" accept=".pdf,.docx,.txt" hidden>
+            <div id="fileName" class="file-name"></div>
+        </div>
 
+        {% if form.errors %}
+        <div class="form-errors">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <p class="error-message">{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Отправить резюме</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    (function() {
+        const zone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileNameSpan = document.getElementById('fileName');
+
+        zone.addEventListener('click', () => fileInput.click());
+
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            zone.classList.add('drag-over');
+        });
+
+        zone.addEventListener('dragleave', () => {
+            zone.classList.remove('drag-over');
+        });
+
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            zone.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                updateFileName(files[0].name);
+            }
+        });
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                updateFileName(fileInput.files[0].name);
+            } else {
+                fileNameSpan.textContent = '';
+            }
+        });
+
+        function updateFileName(name) {
+            fileNameSpan.textContent = `Выбран файл: ${name}`;
+        }
+    })();
+</script>
 {% endblock %}

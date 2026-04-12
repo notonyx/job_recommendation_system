@@ -1,9 +1,9 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 
 {% block content %}
-<h2>Добро пожаловать 👋</h2>
-
-<p>Система подбора вакансий по резюме</p>
-
-<a href="/upload/">Начать</a>
+<div class="hero">
+    <h2>Найдите работу мечты</h2>
+    <p>Загрузите ваше резюме, и нейросеть подберёт для вас наиболее подходящие вакансии.</p>
+    <a href="/upload/" class="btn btn-large">Начать подбор</a>
+</div>
 {% endblock %}
