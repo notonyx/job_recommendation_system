@@ -1,15 +1,37 @@
 {% extends 'web/base.html' %}
-
+{% load static %}
 {% block content %}
 
 <div class="job-detail">
 
     <h2 class="job-title">{{ job.title }}</h2>
-
     <div class="job-meta">
-        <span>💰 {{ job.salary|default:"Не указана" }}</span>
-        <span>📊 {{ job.experience|default:"Не указано" }}</span>
-        <span>💼 {{ job.job_type|default:"Не указано" }}</span>
+        {% if job.salary %}
+            <div class="meta-item">
+                <span class="icon">
+                    <img src="{% static 'icons/salary.svg' %}" alt="salary">
+                </span>
+                <span>{{ job.salary }}</span>
+            </div>
+        {% endif %}
+        {% comment %} <br> {% endcomment %}
+        {% if job.experience %}
+            <div class="meta-item">
+                <span class="icon">
+                    <img src="{% static 'icons/experience.svg' %}" alt="experience">
+                </span>
+                <span>{{ job.experience }}</span>
+            </div>
+        {% endif %}
+        {% comment %} <br> {% endcomment %}
+        {% if job.job_type %}
+            <div class="meta-item">
+                <span class="icon">
+                    <img src="{% static 'icons/job_type.svg' %}" alt="job_type">
+                </span>
+                <span>{{ job.job_type }}</span>
+            </div>
+        {% endif %}
     </div>
 
     <div class="job-section">

@@ -27,22 +27,56 @@ def index(request):
     return render(request, 'web/index.html')
 
 
+# def upload_resume(request):
+#     if request.method == 'POST':
+#         form = ResumeUploadForm(request.POST, request.FILES)
+
+#         if form.is_valid():
+#             file = request.FILES['file']
+
+#             path = f"temp_{file.name}"
+#             with open(path, 'wb+') as destination:
+#                 for chunk in file.chunks():
+#                     destination.write(chunk)
+
+#             text = read_resume(path)
+#             os.remove(path)
+#             request.session['resume_text'] = text
+
+#             return redirect('results')
+
+#     else:
+#         form = ResumeUploadForm()
+
+#     return render(request, 'web/upload.html', {'form': form})
+
 def upload_resume(request):
     if request.method == 'POST':
         form = ResumeUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
-            file = request.FILES['file']
+            file = request.FILES.get('file')   # ✅ было []
+            text_input = form.cleaned_data.get("text")  # ✅ новое
 
-            path = f"temp_{file.name}"
-            with open(path, 'wb+') as destination:
-                for chunk in file.chunks():
-                    destination.write(chunk)
+            # 👉 если пользователь вставил текст — используем его
+            if text_input:
+                text = text_input
 
-            text = read_resume(path)
-            os.remove(path)
+            # 👉 иначе работаем как раньше с файлом
+            elif file:
+                path = f"temp_{file.name}"
+                with open(path, 'wb+') as destination:
+                    for chunk in file.chunks():
+                        destination.write(chunk)
+
+                text = read_resume(path)
+                os.remove(path)
+
+            else:
+                # защита (хотя форма уже валидирует)
+                return render(request, 'web/upload.html', {'form': form})
+
             request.session['resume_text'] = text
-
             return redirect('results')
 
     else:
@@ -64,7 +98,22 @@ def results(request):
     print(jobs.head())
     print(jobs.columns)
 
+    jobs["similarity_percent"] = jobs["similarity"] * 100
     jobs_list = jobs.to_dict(orient="records")
+
+    # ----------------------------
+    for job in jobs_list:
+        job_id = int(job.get("id"))
+
+        full_row = jobs_full[jobs_full["id"] == job_id]
+
+        if not full_row.empty:
+            full_row = full_row.iloc[0]
+
+            job["description"] = full_row.get("description")
+            job["salary"] = full_row.get("salary")
+            job["experience"] = full_row.get("experience")
+            job["job_type"] = full_row.get("job_type")
 
     return render(request, "web/results.html", {"jobs": jobs_list})
 

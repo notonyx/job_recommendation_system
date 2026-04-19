@@ -1,5 +1,4 @@
 {% extends 'web/base.html' %}
-
 {% block content %}
 <div class="upload-section">
     <h2>Загрузите резюме</h2>
@@ -14,6 +13,8 @@
             <input type="file" name="file" id="fileInput" accept=".pdf,.docx,.txt" hidden>
             <div id="fileName" class="file-name"></div>
         </div>
+
+        <textarea name="text" id="resumeTextarea" class="resume-textarea" placeholder="Вставьте текст резюме..."></textarea>
 
         {% if form.errors %}
         <div class="form-errors">
@@ -70,5 +71,13 @@
             fileNameSpan.textContent = `Выбран файл: ${name}`;
         }
     })();
+</script>
+<script>
+    const textarea = document.getElementById('resumeTextarea');
+
+    textarea.addEventListener('input', function () {
+        this.style.height = 'auto'; // сброс
+        this.style.height = this.scrollHeight + 'px'; // подгон под текст
+    });
 </script>
 {% endblock %}
