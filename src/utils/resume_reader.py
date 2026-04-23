@@ -85,3 +85,69 @@ def clean_resume(text):
         text = text.replace(word, "")
 
     return text
+
+import re
+
+def build_semantic_resume(text):
+    # def extract_section(text, keyword):
+    #     pattern = rf"{keyword}(.+?)(\n[A-Я][а-я]+:|\n[A-Я][а-я]+\s|$)"
+    #     match = re.search(pattern, text, re.S)
+    #     return match.group(1).strip().replace("\n", " ") if match else ""
+    # ------------------------
+    # 🔹 навыки
+    # ------------------------
+    # skills = re.findall(r"Навыки(.+?)Дополнительная", text, re.S)
+    skills = re.search(
+        r"Навыки(.+?)(?:\n[A-ЯЁ][^\n]*|$)",
+        text,
+        re.S
+    )
+    skills_text = skills[0] if skills else ""
+
+    # чистим
+    skills_text = skills_text.replace("\n", " ")
+
+    # --------------------------------
+
+    # skills = re.findall(r"Навыки(.+?)(Знание языков|Опыт работы|Образование|Резюме|$)", text, re.S)
+    # skills_text = skills[0].replace("\n", " ").strip() if skills else ""
+
+    # ------------------------
+    # 🔹 должность
+    # ------------------------
+    job = re.findall(r"Желаемая должность и зарплата(.+?)Специализации", text, re.S)
+    job_text = job[0] if job else ""
+
+    # ------------------------
+    # 🔹 опыт работы
+    # ------------------------
+
+    experience = re.findall(
+        r"Опыт работы(.+?)Образование",
+        text,
+        re.S
+    )
+    experience_text = experience[0].replace("\n", " ").strip() if experience else ""
+
+    # -------------------------
+
+    # experience = re.findall(r"Опыт работы(.+?)(Образование|Навыки|$)", text, re.S)
+    # experience_text = experience[0].replace("\n", " ").strip() if experience else ""
+
+    # ------------------------
+    # 🔥 СОБИРАЕМ НОРМАЛЬНЫЙ ТЕКСТ
+    # ------------------------
+
+    # skills_text = extract_section(text, "Навыки")
+    # experience_text = extract_section(text, "Опыт работы")
+    # job_text = extract_section(text, "Желаемая должность и зарплата")
+
+    result = f"""
+    Кандидат претендует на позицию {job_text}.
+    Навыки: {skills_text}.
+    Опыт работы: {experience_text}.
+    """
+
+    print(result)
+
+    return result

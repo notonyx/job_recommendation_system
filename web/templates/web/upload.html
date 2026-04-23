@@ -80,4 +80,10 @@
         this.style.height = this.scrollHeight + 'px'; // подгон под текст
     });
 </script>
+<script>
+document.getElementById("uploadForm").addEventListener("submit", function () {
+    const loader = document.getElementById("loader");
+    loader.classList.remove("hidden");
+});
+</script>
 {% endblock %}

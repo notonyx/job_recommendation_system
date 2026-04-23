@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 import pandas as pd
 import os
 from src.models.bert_faiss_model import JobRecommenderBERTFAISS
-from src.utils.resume_reader import read_resume, normalize_resume, clean_resume
+from src.utils.resume_reader import read_resume, normalize_resume, clean_resume, build_semantic_resume
 from src.utils.text_preprocessing import clean_text
 from .forms import ResumeUploadForm
 
@@ -55,14 +55,12 @@ def upload_resume(request):
         form = ResumeUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
-            file = request.FILES.get('file')   # ✅ было []
-            text_input = form.cleaned_data.get("text")  # ✅ новое
+            file = request.FILES.get('file')
+            text_input = form.cleaned_data.get("text")
 
-            # 👉 если пользователь вставил текст — используем его
             if text_input:
                 text = text_input
 
-            # 👉 иначе работаем как раньше с файлом
             elif file:
                 path = f"temp_{file.name}"
                 with open(path, 'wb+') as destination:
@@ -73,7 +71,6 @@ def upload_resume(request):
                 os.remove(path)
 
             else:
-                # защита (хотя форма уже валидирует)
                 return render(request, 'web/upload.html', {'form': form})
 
             request.session['resume_text'] = text
@@ -84,12 +81,74 @@ def upload_resume(request):
 
     return render(request, 'web/upload.html', {'form': form})
 
+def format_commas(text):
+    if isinstance(text, str):
+        return ", ".join([t.strip() for t in text.split(",")])
+    return text
+
+def format_salary(s):
+    if pd.isna(s) or s == "Не указано":
+        return "Не указано"
+    return s
+
+def format_description(text):
+    if isinstance(text, str):
+        text = text.replace(" Обязанности", "\n\nОбязанности")
+        text = text.replace(" Требования", "\n\nТребования")
+        text = text.replace(" Условия", "\n\nУсловия")
+    return text
+
+def is_hh_resume(text):
+    keywords = [
+        "желаемая должность и зарплата",
+        "предпочитаемый способ связи",
+        "проживает",
+        "гражданство",
+        "специализации",
+        "тип занятости",
+        "занятость",
+        "график работы",
+        "формат работы",
+        "желательное время в пути до работы",
+        "образование",
+        "повышение квалификации",
+        "курсы"
+        # "обо мне",
+        # "навыки",
+        # "ключевые навыки"
+        # "знание языков",
+        # "опыт работы",
+    ]
+
+    for k in keywords:
+        if k.lower() in text.lower():
+            print(k)
+
+    score = sum(1 for k in keywords if k.lower() in text.lower())
+
+    print("score: ", score)
+    return score >= 7
+
 
 def results(request):
     resume_text = request.session.get("resume_text", "")
 
+    print("resume_text:\n\n",resume_text, "\n\n")
+
+    # resume_text = normalize_resume(resume_text)
+    # resume_text = clean_resume(resume_text)
+
+    # resume_text = build_semantic_resume(resume_text)
+
+    # resume_text = clean_text(resume_text)
+
     resume_text = normalize_resume(resume_text)
-    resume_text = clean_resume(resume_text)
+
+    if is_hh_resume(resume_text):
+        resume_text = build_semantic_resume(resume_text)
+    else:
+        resume_text = clean_resume(resume_text)
+
     resume_text = clean_text(resume_text)
 
     model = get_recommender()
@@ -99,6 +158,7 @@ def results(request):
     print(jobs.columns)
 
     jobs["similarity_percent"] = jobs["similarity"] * 100
+
     jobs_list = jobs.to_dict(orient="records")
 
     # ----------------------------
@@ -114,6 +174,12 @@ def results(request):
             job["salary"] = full_row.get("salary")
             job["experience"] = full_row.get("experience")
             job["job_type"] = full_row.get("job_type")
+            
+
+            job["salary"] = format_salary(job["salary"])
+            job["description"] = format_description(job["description"])
+            job["job_type"] = format_commas(job["job_type"])
+            job["experience"] = format_commas(job["experience"])
 
     return render(request, "web/results.html", {"jobs": jobs_list})
 
