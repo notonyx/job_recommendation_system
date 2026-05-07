@@ -495,3 +495,29 @@ body {
         transform: rotate(360deg);
     }
 }
+
+/* ------------------ ссылки -------------------- */
+
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.job-links {
+    display: flex;
+    gap: 12px;
+}
+
+.job-link img {
+    width: 34px;
+    height: 34px;
+    transition: 0.2s;
+    opacity: 0.9;
+}
+
+.job-link img:hover {
+    transform: scale(1.1);
+    opacity: 1;
+}

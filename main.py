@@ -17,6 +17,11 @@ def main():
 
     # recommender.train()
 
+
+    # resume_path = "data/resumes/ramir_resume.pdf"
+    # resume = read_resume(resume_path)
+    # resume = clean_text(resume)
+
     # resume = """
     # Python developer
     # Django
@@ -25,7 +30,32 @@ def main():
     # Docker
     # """
 
+    resume = """
+    Я опытный Python-разработчик с более чем 3 годами работы в веб-разработке и бэкенд-проектах. 
+    Имею глубокие знания Django и Flask, умею создавать REST API и интегрировать сторонние сервисы. 
+    Работал с PostgreSQL и MySQL, умею проектировать базы данных и оптимизировать запросы. 
+    Опыт работы с Docker и Docker Compose для контейнеризации приложений, CI/CD, настройка Git для командной разработки. 
+    Знаком с Linux-серверами, умею настраивать виртуальные окружения, мониторинг и логирование. 
+    Имею опыт работы с Redis, Celery, RabbitMQ для асинхронной обработки задач. 
+    Участвовал в создании масштабируемых веб-приложений и интеграции сторонних API, тестировал код через pytest. 
+    Готов работать как на стартап-проектах, так и на крупных продуктивных системах.
+    """
+
+    # resume = """
+    # Я опытный разработчик с более чем 3 годами работы. 
+    # Аналитик
+    # Excel
+    # ML
+    # Тестировщик
+    # Python
+    # Java
+    # C++
+    # CI/CD
+    # Docker
+    # """
+
     # resume = clean_text(resume)
+    # # print(resume)
 
     # results = recommender.recommend(resume, top_k=10)
 
@@ -83,11 +113,7 @@ def main():
 
     # resume_path = "data/resumes/resume_pdf.pdf"
 
-    resume_path = "data/resumes/resume_word.docx"
-    resume = read_resume(resume_path)
-    resume = clean_text(resume)
-
-    print(resume)
+    # print(resume)
 
     # resume = """
     # Я опытный маркетолог с 5-летним стажем работы в digital-рекламе и продвижении брендов. 
@@ -102,39 +128,39 @@ def main():
 
 # ----------------------------------------------------------------------------------------------
 
-    recommender = JobRecommenderBERTFAISS(batch_size=256)
-    recommender.load_data("data/processed/jobs_cleaned_all.csv")
-    recommender.encode_jobs()  # создаёт эмбеддинги и FAISS индекс
-
-    results = recommender.recommend(resume, top_k=30)
-    results = unique_by_title(results)
-    results = results[:10]
-
-    print("\nРекомендуемые вакансии (BERT + FAISS):\n")
-    for i, row in results.iterrows():
-        print("ID:", row["id"])
-        print("Text:", row["text"][:200])
-        print("Similarity:", row["similarity"])
-        print()
-
-
-# -------  Hybrid система (не очень)  ---------------------------------------------------------------------------------------
-
-    # recommender = JobRecommenderHybrid(top_n_bm25=100)
-
+    # recommender = JobRecommenderBERTFAISS(batch_size=256)
     # recommender.load_data("data/processed/jobs_cleaned_all.csv")
+    # recommender.encode_jobs()  # создаёт эмбеддинги и FAISS индекс
 
-    # recommender.prepare_bm25()
-    # recommender.encode_jobs()
+    # results = recommender.recommend(resume, top_k=30)
+    # results = unique_by_title(results)
+    # results = results[:10]
 
-    # results = recommender.recommend(resume, top_k=10)
-
-    # print("\nРекомендуемые вакансии (hybrid model):\n")
+    # print("\nРекомендуемые вакансии (BERT + FAISS):\n")
     # for i, row in results.iterrows():
     #     print("ID:", row["id"])
     #     print("Text:", row["text"][:200])
     #     print("Similarity:", row["similarity"])
     #     print()
+
+
+# -------  Hybrid система (не очень)  ---------------------------------------------------------------------------------------
+
+    recommender = JobRecommenderHybrid(top_n_bm25=100)
+
+    recommender.load_data("data/processed/jobs_cleaned_all.csv")
+
+    recommender.prepare_bm25()
+    recommender.encode_jobs()
+
+    results = recommender.recommend(resume, top_k=10)
+
+    print("\nРекомендуемые вакансии (hybrid model):\n")
+    for i, row in results.iterrows():
+        print("ID:", row["id"])
+        print("Text:", row["text"][:200])
+        print("Similarity:", row["similarity"])
+        print()
 
 # ----------------------------------------------------------------------------------------------
 

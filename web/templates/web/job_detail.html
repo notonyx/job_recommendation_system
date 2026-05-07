@@ -4,7 +4,31 @@
 
 <div class="job-detail">
 
-    <h2 class="job-title">{{ job.title }}</h2>
+    <div class="job-header">
+        <h2 class="job-title">{{ job.title }}</h2>
+
+        <div class="job-links">
+            <p> Актуальные вакансии:</p>
+
+            <!-- HeadHunter -->
+            <a href="https://hh.ru/search/vacancy?text={{ job.title|urlencode }}"
+            target="_blank"
+            class="job-link">
+
+                <img src="{% static 'icons/headhunter.svg' %}" alt="HH">
+            </a>
+
+            <!-- Авито Работа -->
+            <a href="https://www.avito.ru/all/vakansii?q={{ job.title|urlencode }}"
+            target="_blank"
+            class="job-link">
+
+                <img src="{% static 'icons/avito.svg' %}" alt="Avito">
+            </a>
+
+        </div>
+    </div>
+
     <div class="job-meta">
         {% if job.salary %}
             <div class="meta-item">
