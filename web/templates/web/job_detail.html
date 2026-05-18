@@ -60,7 +60,8 @@
 
     <div class="job-section">
         <h3>Описание</h3>
-        <p>{{ job.description|linebreaks }}</p>
+        {% comment %} <p>{{ job.description|linebreaks }}</p> {% endcomment %}
+        <p>{{ job.description|linebreaksbr }}</p>
     </div>
 
     <div class="job-section">

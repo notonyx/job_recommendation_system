@@ -7,15 +7,25 @@ from src.utils.resume_reader import read_resume
 from src.utils.recommendation_postprocessing import unique_by_title
 from src.models.hybrid_model import JobRecommenderHybrid
 
+
+import time
+import psutil
+import os
+
 def main():
+
+    start_time = time.time()
+    process = psutil.Process(os.getpid())
 
     # --------------- TF IDF -------------------
 
-    # recommender = JobRecommenderTFIDF()
+    recommender = JobRecommenderTFIDF()
 
-    # recommender.load_data("data/processed/jobs_cleaned.csv")
+    recommender.load_data("data/processed/jobs_cleaned.csv")
+    # recommender.load_data("data/processed/jobs_cleaned_all.csv")
 
-    # recommender.train()
+    recommend_start = time.time()
+    recommender.train()
 
 
     # resume_path = "data/resumes/ramir_resume.pdf"
@@ -54,41 +64,63 @@ def main():
     # Docker
     # """
 
-    # resume = clean_text(resume)
-    # # print(resume)
+    resume = clean_text(resume)
 
-    # results = recommender.recommend(resume, top_k=10)
+    results = recommender.recommend(resume, top_k=10)
+    recommend_end = time.time()
 
-    # print("\nРекомендуемые вакансии:\n")
+    end_time = time.time()
+    memory_mb = process.memory_info().rss / 1024 / 1024
 
-    # for i, row in results.iterrows():
+    print("\nРекомендуемые вакансии:\n")
 
-    #     print("ID:", row["id"])
-    #     print("Text:", row["text"][:200])
-    #     print()
+    for i, row in results.iterrows():
+
+        print("ID:", row["id"])
+        print("Text:", row["text"][:200])
+        print()
+
+    print("\n========= PERFORMANCE =========")
+
+    print(f"Общее время: {end_time - start_time:.2f} сек")
+
+    print(f"Время поиска: {recommend_end - recommend_start:.4f} сек")
+
+    print(f"Использование памяти: {memory_mb:.2f} MB")
 
     # --------------- BERT -------------------
     
     # recommender = JobRecommenderBERT()
     # recommender.load_data("data/processed/jobs_cleaned.csv")
-    # recommender.encode_jobs()
 
-    # resume = """
-    # Python developer
-    # Django
-    # REST API
-    # PostgreSQL
-    # Docker
-    # """
+    # encode_start = time.time()
+    # recommender.encode_jobs()
+    # encode_end = time.time()
+
     # resume = clean_text(resume)
 
+    # recommend_start = time.time()
     # results = recommender.recommend(resume, top_k=10)
+    # recommend_end = time.time()
+
+    # end_time = time.time()
+    # memory_mb = process.memory_info().rss / 1024 / 1024
 
     # print("\nРекомендуемые вакансии (BERT):\n")
     # for i, row in results.iterrows():
     #     print("ID:", row["id"])
     #     print("Text:", row["text"][:200])
     #     print()
+
+    # print("\n========= PERFORMANCE =========")
+
+    # print(f"Общее время: {end_time - start_time:.2f} сек")
+
+    # print(f"Время векторизации: {encode_end - encode_start:.2f} сек")
+
+    # print(f"Время поиска: {recommend_end - recommend_start:.4f} сек")
+
+    # print(f"Использование памяти: {memory_mb:.2f} MB")
 
     # --------------- BERT + FAISS -------------------
 
@@ -130,11 +162,21 @@ def main():
 
     # recommender = JobRecommenderBERTFAISS(batch_size=256)
     # recommender.load_data("data/processed/jobs_cleaned_all.csv")
-    # recommender.encode_jobs()  # создаёт эмбеддинги и FAISS индекс
 
+    # encode_start = time.time()
+    # recommender.encode_jobs()  # создаёт эмбеддинги и FAISS индекс
+    # encode_end = time.time()
+
+
+    # recommend_start = time.time()
     # results = recommender.recommend(resume, top_k=30)
+    # recommend_end = time.time()
+
     # results = unique_by_title(results)
     # results = results[:10]
+
+    # end_time = time.time()
+    # memory_mb = process.memory_info().rss / 1024 / 1024
 
     # print("\nРекомендуемые вакансии (BERT + FAISS):\n")
     # for i, row in results.iterrows():
@@ -143,24 +185,56 @@ def main():
     #     print("Similarity:", row["similarity"])
     #     print()
 
+    # print("\n========= PERFORMANCE =========")
+
+    # print(f"Общее время: {end_time - start_time:.2f} сек")
+
+    # print(f"Время векторизации: {encode_end - encode_start:.2f} сек")
+
+    # print(f"Время поиска: {recommend_end - recommend_start:.4f} сек")
+
+    # print(f"Использование памяти: {memory_mb:.2f} MB")
+
 
 # -------  Hybrid система (не очень)  ---------------------------------------------------------------------------------------
 
-    recommender = JobRecommenderHybrid(top_n_bm25=100)
+    # recommender = JobRecommenderHybrid(top_n_bm25=100)
 
-    recommender.load_data("data/processed/jobs_cleaned_all.csv")
+    # recommender.load_data("data/processed/jobs_cleaned_all.csv")
 
-    recommender.prepare_bm25()
-    recommender.encode_jobs()
+    # bm25_start = time.time()
+    # recommender.prepare_bm25()
+    # bm25_end = time.time()
 
-    results = recommender.recommend(resume, top_k=10)
+    # encode_start = time.time()
+    # recommender.encode_jobs()
+    # encode_end = time.time()
 
-    print("\nРекомендуемые вакансии (hybrid model):\n")
-    for i, row in results.iterrows():
-        print("ID:", row["id"])
-        print("Text:", row["text"][:200])
-        print("Similarity:", row["similarity"])
-        print()
+    # recommend_start = time.time()
+    # results = recommender.recommend(resume, top_k=10)
+    # recommend_end = time.time()
+
+    # end_time = time.time()
+    # memory_mb = process.memory_info().rss / 1024 / 1024
+
+    # print("\nРекомендуемые вакансии (hybrid model):\n")
+    # for i, row in results.iterrows():
+    #     print("ID:", row["id"])
+    #     print("Text:", row["text"][:200])
+    #     print("Similarity:", row["similarity"])
+    #     print()
+
+    # print("\n========= PERFORMANCE =========")
+
+    # print(f"Общее время: {end_time - start_time:.2f} сек")
+
+    # print(f"Время prepare_bm25: {bm25_end - bm25_start:.2f} сек")
+
+    # print(f"Время векторизации: {encode_end - encode_start:.2f} сек")
+
+    # print(f"Время поиска: {recommend_end - recommend_start:.4f} сек")
+
+    # print(f"Использование памяти: {memory_mb:.2f} MB")
 
 # ----------------------------------------------------------------------------------------------
 

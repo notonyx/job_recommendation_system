@@ -30,10 +30,8 @@ class JobRecommenderHybrid:
 
     def prepare_bm25(self):
         print("Подготовка BM25...")
-
         self.corpus = [text.split() for text in self.df["text"]]
         self.bm25 = BM25Okapi(self.corpus)
-
         print("BM25 готов")
 
     def encode_jobs(self, embeddings_path="data/processed/job_embeddings.npy"):
@@ -63,25 +61,20 @@ class JobRecommenderHybrid:
         print("Эмбеддинги сохранены:", embeddings_path)
 
     def recommend(self, resume_text, top_k=10):
-
         resume_text = clean_text(resume_text)
         query_tokens = resume_text.split()
 
-        # ---------- ШАГ 1: BM25 ----------
+        # BM25
         bm25_scores = self.bm25.get_scores(query_tokens)
-
         top_bm25_idx = np.argsort(bm25_scores)[-self.top_n_bm25:][::-1]
 
-        # ---------- ШАГ 2: BERT ----------
+        # BERT
         candidate_embeddings = self.embeddings[top_bm25_idx]
-
         resume_embedding = self.model.encode([resume_text])
-
         index = faiss.IndexFlatL2(candidate_embeddings.shape[1])
         index.add(candidate_embeddings)
 
         distances, indices = index.search(resume_embedding, top_k)
-
         final_indices = top_bm25_idx[indices[0]]
 
         results = self.df.iloc[final_indices].copy()

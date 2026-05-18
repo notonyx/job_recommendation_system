@@ -5,13 +5,25 @@
     box-sizing: border-box;
 }
 
-body {
+/* body {
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     background: #f8fafc;
     color: #0f172a;
     line-height: 1.5;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+} */
+
+body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+    line-height: 1.5;
+
+    display: flex;
+    flex-direction: column;
+
     min-height: 100vh;
 }
 
@@ -51,12 +63,43 @@ body {
 }
 
 /* main container */
-.container {
+/* .container {
     max-width: 1280px;
     margin: 0 auto;
     padding: 2rem 1.5rem;
     flex: 1;
     width: 100%;
+
+    align-items: center;
+    justify-content: center;
+} */
+
+/* .container {
+    max-width: 1280px;
+    width: 100%;
+    padding: 2rem 1.5rem;
+    margin: 0 auto;          
+    flex: 1;               
+    display: flex;           
+    flex-direction: column;   
+    align-items: center;      
+    justify-content: center;  
+} */
+
+.container {
+    flex: 1;
+
+    max-width: 1280px;
+    width: 100%;
+
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    align-items: center; /* добавить */
 }
 
 /* footer */
@@ -520,4 +563,14 @@ body {
 .job-link img:hover {
     transform: scale(1.1);
     opacity: 1;
+}
+
+
+.hero,
+.upload-section,
+.results-header,
+.jobs-grid,
+.job-detail,
+.empty-state {
+    width: 100%;
 }
