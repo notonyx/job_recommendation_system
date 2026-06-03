@@ -9,7 +9,6 @@ from tqdm import tqdm
 
 
 class JobRecommenderBERTFAISS:
-
     def __init__(self, model_name="all-MiniLM-L6-v2", embeddings_path="data/processed/job_embeddings.npy", batch_size=128):
         self.model = SentenceTransformer(model_name)
         self.df = None

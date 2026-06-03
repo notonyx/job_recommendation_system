@@ -1,19 +1,8 @@
-/* reset & base */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
-/* body {
-    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    background: #f8fafc;
-    color: #0f172a;
-    line-height: 1.5;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-} */
 
 body {
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
@@ -27,7 +16,6 @@ body {
     min-height: 100vh;
 }
 
-/* header */
 .navbar {
     background: #1e293b;
     color: white;
@@ -62,30 +50,6 @@ body {
     color: white;
 }
 
-/* main container */
-/* .container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem;
-    flex: 1;
-    width: 100%;
-
-    align-items: center;
-    justify-content: center;
-} */
-
-/* .container {
-    max-width: 1280px;
-    width: 100%;
-    padding: 2rem 1.5rem;
-    margin: 0 auto;          
-    flex: 1;               
-    display: flex;           
-    flex-direction: column;   
-    align-items: center;      
-    justify-content: center;  
-} */
-
 .container {
     flex: 1;
 
@@ -102,7 +66,6 @@ body {
     align-items: center; /* добавить */
 }
 
-/* footer */
 .footer {
     background: #f1f5f9;
     text-align: center;
@@ -112,7 +75,6 @@ body {
     border-top: 1px solid #e2e8f0;
 }
 
-/* hero (index) */
 .hero {
     text-align: center;
     max-width: 700px;
@@ -139,7 +101,6 @@ body {
     margin-bottom: 2rem;
 }
 
-/* buttons */
 .btn {
     display: inline-block;
     background: #3b82f6;
@@ -182,7 +143,6 @@ body {
     border-color: #94a3b8;
 }
 
-/* upload section */
 .upload-section {
     max-width: 700px;
     margin: 0 auto;
@@ -255,7 +215,6 @@ body {
     text-align: center;
 }
 
-/* results grid */
 .results-header {
     margin-bottom: 2rem;
 }
@@ -391,18 +350,6 @@ body {
     color: #334155;
 }
 
-/* .job-section {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: #0f172a;
-    line-height: 1.4;
-} */
-
-
-
-
-
 .upload-divider {
     text-align: center;
     margin: 1.5rem 0;
@@ -461,7 +408,6 @@ body {
     margin-right: 8px;
 }
 
-/* responsive */
 @media (max-width: 640px) {
     .navbar {
         flex-direction: column;
@@ -482,11 +428,6 @@ body {
     }
 }
 
-/* --------------------------------------------------------------- */
-
-
-
-/* loader overlay */
 .loader {
     position: fixed;
     top: 0;
@@ -504,17 +445,14 @@ body {
     z-index: 9999;
 }
 
-/* скрытие */
 .hidden {
     display: none;
 }
 
-/* коробка */
 .loader-box {
     text-align: center;
 }
 
-/* спиннер */
 .spinner {
     width: 50px;
     height: 50px;
@@ -525,21 +463,17 @@ body {
     margin: 0 auto 15px;
 }
 
-/* текст */
 .loader-box p {
     font-size: 1rem;
     color: #1e293b;
     font-weight: 500;
 }
 
-/* анимация */
 @keyframes spin {
     to {
         transform: rotate(360deg);
     }
 }
-
-/* ------------------ ссылки -------------------- */
 
 .job-header {
     display: flex;
@@ -564,7 +498,6 @@ body {
     transform: scale(1.1);
     opacity: 1;
 }
-
 
 .hero,
 .upload-section,

@@ -10,7 +10,6 @@
         <div class="job-links">
             <p> Актуальные вакансии:</p>
 
-            <!-- HeadHunter -->
             <a href="https://hh.ru/search/vacancy?text={{ job.title|urlencode }}"
             target="_blank"
             class="job-link">
@@ -18,7 +17,6 @@
                 <img src="{% static 'icons/headhunter.svg' %}" alt="HH">
             </a>
 
-            <!-- Авито Работа -->
             <a href="https://www.avito.ru/all/vakansii?q={{ job.title|urlencode }}"
             target="_blank"
             class="job-link">
@@ -38,7 +36,6 @@
                 <span>{{ job.salary }}</span>
             </div>
         {% endif %}
-        {% comment %} <br> {% endcomment %}
         {% if job.experience %}
             <div class="meta-item">
                 <span class="icon">
@@ -47,7 +44,6 @@
                 <span>{{ job.experience }}</span>
             </div>
         {% endif %}
-        {% comment %} <br> {% endcomment %}
         {% if job.job_type %}
             <div class="meta-item">
                 <span class="icon">
@@ -60,7 +56,6 @@
 
     <div class="job-section">
         <h3>Описание</h3>
-        {% comment %} <p>{{ job.description|linebreaks }}</p> {% endcomment %}
         <p>{{ job.description|linebreaksbr }}</p>
     </div>
 

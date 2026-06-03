@@ -1,18 +1,14 @@
 import pandas as pd
 import numpy as np
 import os
-
 from rank_bm25 import BM25Okapi
 from sentence_transformers import SentenceTransformer
 import faiss
-
 from src.utils.text_preprocessing import clean_text
-
 
 class JobRecommenderHybrid:
 
     def __init__(self, top_n_bm25=100):
-
         self.df = None
 
         # BM25
@@ -35,7 +31,6 @@ class JobRecommenderHybrid:
         print("BM25 готов")
 
     def encode_jobs(self, embeddings_path="data/processed/job_embeddings.npy"):
-        # ---------- ПРОБУЕМ ЗАГРУЗИТЬ ----------
         if os.path.exists(embeddings_path):
             print("Загрузка эмбеддингов из файла...")
 

@@ -1,6 +1,5 @@
 import re
 
-
 def clean_text(text):
     """
     Очистка текста

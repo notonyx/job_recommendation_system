@@ -39,19 +39,15 @@ def rerank(results, resume_vec, model):
     titles = results["title"].fillna("").tolist()
     descriptions = results["text"].fillna("").tolist()
 
-    # кодируем отдельно
     title_embeddings = model.encode(titles, convert_to_numpy=True)
     desc_embeddings = model.encode(descriptions, convert_to_numpy=True)
 
-    # считаем similarity
     title_sim = cosine_similarity(resume_vec, title_embeddings)[0]
     desc_sim = cosine_similarity(resume_vec, desc_embeddings)[0]
 
-    # комбинируем (веса можно менять)
     results["rerank_score"] = (
         results["similarity"] * 0.6 +
         title_sim * 0.3 +
         desc_sim * 0.1
     )
-
     return results.sort_values(by="rerank_score", ascending=False).drop(columns=["rerank_score"])
